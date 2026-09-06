@@ -86,6 +86,30 @@ class PluginReleaseContractTests(unittest.TestCase):
         self.assertEqual(package_help.returncode, 0, package_help.stderr)
         self.assertEqual(root_help.stdout, package_help.stdout)
 
+    def test_diddy_bridge_has_matching_development_and_installed_entry_points(self) -> None:
+        """The installed package owns the private DIDdy adapter implementation."""
+        if PLUGIN_ROOT == PACKAGE:
+            self.skipTest("standalone installed plugin has no separate authoring copy")
+        wrapper = REPOSITORY_ROOT / "scripts" / "diddy-bridge.mjs"
+        implementation = PACKAGE / "scripts" / "diddy-bridge.mjs"
+        self.assertIn("../plugins/furry-image-studio/scripts/diddy-bridge.mjs", wrapper.read_text(encoding="utf-8"))
+        self.assertIn("Private local adapter for the DIDdy", implementation.read_text(encoding="utf-8"))
+        root_help = subprocess.run(
+            ["node", "scripts/diddy-bridge.mjs", "--help"],
+            cwd=REPOSITORY_ROOT,
+            capture_output=True,
+            text=True,
+        )
+        package_help = subprocess.run(
+            ["node", "scripts/diddy-bridge.mjs", "--help"],
+            cwd=PACKAGE,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(root_help.returncode, 0, root_help.stderr)
+        self.assertEqual(package_help.returncode, 0, package_help.stderr)
+        self.assertEqual(root_help.stdout, package_help.stdout)
+
     def test_skills_have_required_metadata(self) -> None:
         for skill in sorted((PACKAGE / "skills").glob("*/SKILL.md")):
             text = skill.read_text(encoding="utf-8")
