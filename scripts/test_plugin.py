@@ -94,6 +94,7 @@ class PluginReleaseContractTests(unittest.TestCase):
         implementation = PACKAGE / "scripts" / "diddy-bridge.mjs"
         self.assertIn("../plugins/furry-image-studio/scripts/diddy-bridge.mjs", wrapper.read_text(encoding="utf-8"))
         self.assertIn("Private local adapter for the DIDdy", implementation.read_text(encoding="utf-8"))
+        self.assertIn("export async function generatePreparedFurryScene", implementation.read_text(encoding="utf-8"))
         root_help = subprocess.run(
             ["node", "scripts/diddy-bridge.mjs", "--help"],
             cwd=REPOSITORY_ROOT,

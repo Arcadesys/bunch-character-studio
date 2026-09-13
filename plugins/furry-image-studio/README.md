@@ -96,6 +96,17 @@ This bridge is intentionally not a substitute for an attached source snapshot
 or a live DIDdy connector. The ordinary Furry Image Studio transformation rules
 remain the source of truth for image composition, preservation, and anatomy.
 
+### Private DIDdy multi-character scenes
+
+For a fresh scene with explicitly named alters, `generate-diddy-scene` calls
+`prepare_furry_scene` and requires every canonical selected reference before
+generation. The bridge preserves the alter ID, name, and image ID beside each
+temporary local reference, so the host can attach every selected image to one
+generation request without exposing private URLs or capabilities. It never
+claims that preparation or materialization is a generated scene. Hosts without
+programmatic metadata access and multi-reference generation attachment must
+return `HOST_ADAPTER_REQUIRED` with the missing capability.
+
 ### Copy-paste installation prompt
 
 Paste this into a ChatGPT Desktop task when you want its Codex harness to

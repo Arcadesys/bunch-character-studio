@@ -8,9 +8,10 @@
  * benign save receipt.
  */
 import { createWriteStream } from "node:fs";
-import { mkdtemp, chmod, rm, stat } from "node:fs/promises";
-import { basename, dirname, join, resolve } from "node:path";
+import { mkdtemp, chmod, realpath, rm, stat } from "node:fs/promises";
+import { basename, dirname, isAbsolute, join, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
+import { pathToFileURL } from "node:url";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const CONTENT_TYPES = new Map([
@@ -23,7 +24,7 @@ function usage() {
   return [
     "Usage: stty -echo; node <plugin-root>/scripts/diddy-bridge.mjs",
     "Reads one programmatic JSON manifest from stdin and never prints capabilities or URLs.",
-    "Actions: materialize, cleanup, save.",
+    "Actions: materialize, materialize-scene, cleanup, save.",
   ].join("\n");
 }
 
@@ -43,6 +44,71 @@ function isBridgeDirectory(directory) {
   const root = resolve(tmpdir());
   const target = resolve(directory);
   return dirname(target) === root && basename(target).startsWith("diddy-furry-");
+}
+
+function safeError(message) {
+  return new Error(message);
+}
+
+function requiredString(value, label) {
+  if (typeof value !== "string" || !value.trim()) throw safeError(`Invalid ${label}.`);
+  return value;
+}
+
+function preparedScene(toolResult) {
+  const structured = toolResult?.structuredContent;
+  const referenceMedia = toolResult?._meta?.referenceMedia;
+  const prompt = structured?.prompt;
+  const identities = structured?.identities;
+  if (!structured || toolResult?.isError === true || structured.ready !== true || !["READY", "PREPARED"].includes(structured.status)) {
+    throw safeError("Prepared scene is not ready.");
+  }
+  if (typeof prompt !== "string" || !prompt.trim()) {
+    throw safeError("Prepared scene requires a canonical prompt.");
+  }
+  if (!Array.isArray(identities) || identities.length < 1 || identities.length > 12) {
+    throw safeError("Prepared scene requires one to twelve canonical identities.");
+  }
+  if (!Array.isArray(referenceMedia)) {
+    throw safeError("Prepared scene references are unavailable.");
+  }
+
+  const characters = identities.map((identity) => ({
+    alterId: requiredString(identity?.alterId, "scene alter ID"),
+    alterName: requiredString(identity?.alterName, "scene alter name"),
+    referenceImageId: requiredString(identity?.referenceImageId, "scene reference image ID"),
+  }));
+  const expectedIds = new Set(characters.map(({ alterId }) => alterId));
+  if (expectedIds.size !== characters.length) throw safeError("Prepared scene contains duplicate alter IDs.");
+
+  const referencesByAlterId = new Map();
+  for (const reference of referenceMedia) {
+    const alterId = requiredString(reference?.alterId, "reference alter ID");
+    const alterName = requiredString(reference?.alterName, "reference alter name");
+    const imageId = requiredString(reference?.imageId, "reference image ID");
+    if (reference?.role !== "character_reference" || !expectedIds.has(alterId)) {
+      throw safeError("Prepared scene has an unsupported character reference.");
+    }
+    if (referencesByAlterId.has(alterId)) throw safeError("Prepared scene has duplicate character references.");
+    referencesByAlterId.set(alterId, {
+      role: reference.role,
+      alterId,
+      alterName,
+      imageId,
+      contentType: reference.contentType,
+      src: reference.src,
+    });
+  }
+  if (referencesByAlterId.size !== expectedIds.size) {
+    throw safeError("Prepared scene is missing a canonical character reference.");
+  }
+  for (const character of characters) {
+    const reference = referencesByAlterId.get(character.alterId);
+    if (!reference || reference.alterName !== character.alterName || reference.imageId !== character.referenceImageId) {
+      throw safeError("Prepared scene reference identity did not match its canonical character.");
+    }
+  }
+  return { prompt: prompt.trim(), characters, referenceMedia: characters.map(({ alterId }) => referencesByAlterId.get(alterId)) };
 }
 
 async function readOneLine() {
@@ -96,35 +162,118 @@ async function copyReference(source, destination) {
   return { contentType: type, size: total };
 }
 
-async function materialize(input) {
-  if (!Array.isArray(input.referenceMedia) || input.referenceMedia.length < 1 || input.referenceMedia.length > 12) throw new Error("Choose one to twelve selected private references.");
+async function materializeReferences(referenceMedia, publicOrigin, requireCanonicalPath = false) {
+  if (!Array.isArray(referenceMedia) || referenceMedia.length < 1 || referenceMedia.length > 12) throw new Error("Choose one to twelve selected private references.");
   // The metadata already contains every secured DIDdy URL. Derive its common
   // origin here rather than requiring a model-visible configuration value.
-  const origin = requireUrl(input.referenceMedia[0]?.src, "private reference URL");
+  const origin = requireUrl(referenceMedia[0]?.src, "private reference URL");
   if (origin.protocol !== "https:" && !isLocalTest(origin)) throw new Error("DIDdy public origin must use HTTPS.");
-  if (input.publicOrigin && requireUrl(input.publicOrigin, "DIDdy public origin").origin !== origin.origin) throw new Error("Private reference origin did not match its DIDdy handoff.");
+  if (publicOrigin && requireUrl(publicOrigin, "DIDdy public origin").origin !== origin.origin) throw new Error("Private reference origin did not match its DIDdy handoff.");
 
   const directory = await mkdtemp(join(tmpdir(), "diddy-furry-"));
   await chmod(directory, 0o700);
   try {
-    const paths = [];
-    for (const [index, reference] of input.referenceMedia.entries()) {
+    const references = [];
+    for (const [index, reference] of referenceMedia.entries()) {
       if (reference?.role !== "character_reference") throw new Error("Unsupported private reference role.");
       const source = requireUrl(reference.src, "private reference URL");
       if (source.origin !== origin.origin || !source.pathname.startsWith("/api/system/images/inline/") || !source.searchParams.has("cap")) {
         throw new Error("Private reference is not an authorized DIDdy image handoff.");
+      }
+      if (requireCanonicalPath && source.pathname !== `/api/system/images/inline/${encodeURIComponent(reference.imageId)}`) {
+        throw new Error("Private reference did not match its canonical image ID.");
       }
       const extension = CONTENT_TYPES.get(reference.contentType);
       if (!extension) throw new Error("Unsupported private reference content type.");
       const path = join(directory, `reference-${index + 1}${extension}`);
       const copied = await copyReference(source, path);
       if (copied.contentType !== reference.contentType) throw new Error("Private reference content type did not match its handoff.");
-      paths.push(path);
+      references.push({
+        alterId: typeof reference.alterId === "string" ? reference.alterId : undefined,
+        alterName: typeof reference.alterName === "string" ? reference.alterName : undefined,
+        imageId: typeof reference.imageId === "string" ? reference.imageId : undefined,
+        contentType: reference.contentType,
+        path,
+      });
     }
-    process.stdout.write(`${JSON.stringify({ paths, directory })}\n`);
+    return { directory, references };
   } catch (error) {
     await rm(directory, { recursive: true, force: true });
     throw error;
+  }
+}
+
+async function materialize(input) {
+  const handoff = await materializeReferences(input.referenceMedia, input.publicOrigin);
+  process.stdout.write(`${JSON.stringify({
+    paths: handoff.references.map(({ path }) => path),
+    references: handoff.references,
+    directory: handoff.directory,
+  })}\n`);
+}
+
+async function materializePreparedScene(input) {
+  const scene = preparedScene(input.toolResult);
+  const handoff = await materializeReferences(scene.referenceMedia, input.toolResult?._meta?.publicOrigin, true);
+  process.stdout.write(`${JSON.stringify({
+    prompt: scene.prompt,
+    identities: scene.characters,
+    references: handoff.references,
+    directory: handoff.directory,
+  })}\n`);
+}
+
+/**
+ * Run a prepared multi-character scene without ever passing private metadata
+ * to the image model. This is deliberately an exported programmatic adapter:
+ * a CLI cannot safely serialize an image-generation callback.
+ */
+export async function generatePreparedFurryScene({ toolResult, generateScene }) {
+  if (typeof generateScene !== "function") throw safeError("HOST_ADAPTER_REQUIRED");
+  const scene = preparedScene(toolResult);
+  let handoff;
+  try {
+    handoff = await materializeReferences(scene.referenceMedia, toolResult?._meta?.publicOrigin, true);
+    const references = handoff.references.map(({ alterId, alterName, imageId, contentType, path }) => ({
+      alterId,
+      alterName,
+      imageId,
+      contentType,
+      path,
+    }));
+    let generated;
+    try {
+      generated = await generateScene({ prompt: scene.prompt, characters: scene.characters, references });
+    } catch {
+      throw safeError("Scene generation callback failed.");
+    }
+    const outputPath = generated?.outputPath;
+    if (typeof outputPath !== "string" || !isAbsolute(outputPath)) {
+      throw safeError("Scene generation did not return a local output path.");
+    }
+    let outputInfo;
+    try {
+      outputInfo = await stat(outputPath);
+    } catch {
+      throw safeError("Scene generation did not return a readable local output file.");
+    }
+    if (!outputInfo.isFile() || outputInfo.size < 1) {
+      throw safeError("Scene generation did not return a readable local output file.");
+    }
+    const [resolvedOutputPath, resolvedReferenceDirectory] = await Promise.all([
+      realpath(outputPath),
+      realpath(handoff.directory),
+    ]);
+    if (resolvedOutputPath === resolvedReferenceDirectory || resolvedOutputPath.startsWith(`${resolvedReferenceDirectory}${sep}`)) {
+      throw safeError("Scene generation output must not be a temporary character reference.");
+    }
+    const contentType = generated.contentType;
+    if (contentType !== undefined && !CONTENT_TYPES.has(contentType)) {
+      throw safeError("Scene generation returned an unsupported output type.");
+    }
+    return contentType ? { outputPath, contentType } : { outputPath };
+  } finally {
+    if (handoff?.directory) await rm(handoff.directory, { recursive: true, force: true });
   }
 }
 
@@ -150,16 +299,19 @@ async function save(input) {
     redirect: "error",
   });
   if (!response.ok) throw new Error("Private gallery save failed.");
-  process.stdout.write('{"stored":true,"profilePictureChanged":false}\n');
+  const receipt = await response.json().catch(() => null);
+  if (!receipt?.stored || typeof receipt.imageId !== "string") throw new Error("Private gallery save did not return a persisted image ID.");
+  process.stdout.write(`${JSON.stringify({ stored: true, imageId: receipt.imageId, replayed: receipt.replayed === true, profilePictureChanged: false })}\n`);
 }
 
-async function main() {
+export async function main() {
   if (process.argv.includes("--help")) {
     process.stdout.write(`${usage()}\n`);
     return;
   }
   const input = JSON.parse(await readOneLine());
   if (input.action === "materialize") return materialize(input);
+  if (input.action === "materialize-scene") return materializePreparedScene(input);
   if (input.action === "cleanup" && isBridgeDirectory(input.directory)) {
     await rm(input.directory, { recursive: true, force: true });
     process.stdout.write('{"cleaned":true}\n');
@@ -169,7 +321,9 @@ async function main() {
   throw new Error("Invalid private bridge request.");
 }
 
-void main().catch((error) => {
-  process.stderr.write(`DIDdy bridge failed: ${error instanceof Error ? error.message : "unknown"}\n`);
-  process.exitCode = 1;
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  void main().catch(() => {
+    process.stderr.write("DIDdy bridge failed.\n");
+    process.exitCode = 1;
+  });
+}
