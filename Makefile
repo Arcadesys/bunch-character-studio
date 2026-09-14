@@ -1,6 +1,7 @@
 .PHONY: test sync-release plugin-test workspace-deps eval-recorder-test judge-test service-test
+.PHONY: test sync-release plugin-test workspace-deps diddy-bridge-test eval-recorder-test judge-test service-test
 
-test: plugin-test eval-recorder-test judge-test service-test
+test: plugin-test diddy-bridge-test eval-recorder-test judge-test service-test
 
 sync-release:
 	python3 scripts/sync_release.py
@@ -10,6 +11,9 @@ plugin-test:
 
 workspace-deps:
 	npm ci
+
+diddy-bridge-test: workspace-deps
+	npm run diddy:bridge:test
 
 eval-recorder-test: workspace-deps
 	npm run eval:record:test

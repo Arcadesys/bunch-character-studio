@@ -74,6 +74,39 @@ person to transform and the requested character/style. The installed skills
 will use the character and style profiles to make a subject-only edit when
 `toon-in-real-world` is selected.
 
+### Private DIDdy alter handoff
+
+When an authenticated DIDdy connector and the deployed System Companion bridge
+are available in the same fresh task, attach a snapshot and say, for example,
+"Make me Melody Arcade." The `transform-diddy-alter` skill resolves only that
+explicitly named alter, asks DIDdy for the approved private appearance
+references, and hands those references to the existing transformation skill.
+It does not copy DIDdy profiles into this public plugin, infer hosting or
+fronting, or promote a profile picture.
+
+The installed package includes `scripts/diddy-bridge.mjs`, a local adapter that
+receives DIDdy's capability metadata only programmatically on stdin. It writes
+temporary private reference files, records the normal Furry Image Studio eval
+trace before cleanup, and can save a user-selected keeper through DIDdy's
+request-bound private-gallery receipt. It never prints bearer URLs or
+capabilities. A host without a supported metadata-to-attachment handoff must
+return `HOST_ADAPTER_REQUIRED`; it must not claim a transformation occurred.
+
+This bridge is intentionally not a substitute for an attached source snapshot
+or a live DIDdy connector. The ordinary Furry Image Studio transformation rules
+remain the source of truth for image composition, preservation, and anatomy.
+
+### Private DIDdy multi-character scenes
+
+For a fresh scene with explicitly named alters, `generate-diddy-scene` calls
+`prepare_furry_scene` and requires every canonical selected reference before
+generation. The bridge preserves the alter ID, name, and image ID beside each
+temporary local reference, so the host can attach every selected image to one
+generation request without exposing private URLs or capabilities. It never
+claims that preparation or materialization is a generated scene. Hosts without
+programmatic metadata access and multi-reference generation attachment must
+return `HOST_ADAPTER_REQUIRED` with the missing capability.
+
 ### Copy-paste installation prompt
 
 Paste this into a ChatGPT Desktop task when you want its Codex harness to
@@ -152,6 +185,8 @@ development wrapper, while the release package contains the self-contained
 implementation used by an installed plugin. `python3 scripts/test_plugin.py`
 verifies that the mirrored files stay identical and that both recorder entry
 points expose the same CLI, so a change cannot silently split their behavior.
+The DIDdy bridge follows the same contract: the root script is a development
+wrapper and the installed package owns the helper implementation.
 
 After editing a canonical mirrored path, synchronize the installable package
 before committing:

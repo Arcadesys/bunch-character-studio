@@ -1,6 +1,6 @@
 {
   "name": "furry-image-studio",
-  "version": "0.1.0+codex.20260816004500",
+  "version": "0.1.0+codex.20260913010000",
   "description": "Codex / ChatGPT Desktop skill plugin for furry and anthro character image generation.",
   "author": {
     "name": "Arcadesys",
@@ -20,17 +20,18 @@
   "interface": {
     "displayName": "Furry Image Studio",
     "shortDescription": "Generate and edit furry character images.",
-    "longDescription": "Furry Image Studio is a Codex / ChatGPT Desktop skill plugin that lets Codex use arbitrary user-added character profiles and rendering style profiles for furry, anthro, toon-in-real-world, anime, cartoon, and photoreal image work.",
+    "longDescription": "Furry Image Studio is a Codex / ChatGPT Desktop skill plugin that lets Codex use arbitrary user-added character profiles and rendering style profiles for furry, anthro, toon-in-real-world, anime, cartoon, and photoreal image work. It can also route an explicitly named private DIDdy alter through an installed local bridge without publishing private references.",
     "developerName": "Arcadesys",
     "category": "Productivity",
     "capabilities": [
       "image generation",
       "image editing",
       "character profiles",
-      "style profiles"
+      "style profiles",
+      "private DIDdy bridge"
     ],
     "websiteURL": "https://github.com/Arcadesys/furry-image-studio",
     "logo": "./assets/plugin-logo.png",
-    "defaultPrompt": "Help me create or transform a furry character image."
+    "defaultPrompt": "Help me create or transform a furry character image. With an attached snapshot, I can also make you an explicitly named DIDdy alter."
   }
 }
