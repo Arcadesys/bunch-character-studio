@@ -113,7 +113,7 @@ test("installed bridge rejects a non-DIDdy keeper destination", async () => {
 });
 
 test("scene adapter gives a generator each canonical identity and local reference, then cleans up", async () => {
-  const capabilities = ["private-twilight-capability", "private-potts-capability"];
+  const capabilities = ["private-twilight-one-capability", "private-twilight-two-capability", "private-potts-capability"];
   const originalNodeEnv = process.env.NODE_ENV;
   process.env.NODE_ENV = "test";
   const service = await localServer((request, response) => {
@@ -134,14 +134,15 @@ test("scene adapter gives a generator each canonical identity and local referenc
           status: "READY",
           prompt: "Twilight Arcade and Potts Arcade are broing out in a fresh scene.",
           identities: [
-            { alterId: "twilight-id", alterName: "Twilight Arcade", referenceImageId: "twilight-image" },
-            { alterId: "potts-id", alterName: "Potts Arcade", referenceImageId: "potts-image" },
+            { alterId: "twilight-id", alterName: "Twilight Arcade", referenceImageIds: ["twilight-one", "twilight-two"] },
+            { alterId: "potts-id", alterName: "Potts Arcade", referenceImageIds: ["potts-image"] },
           ],
         },
         _meta: {
           referenceMedia: [
-            { role: "character_reference", alterId: "twilight-id", alterName: "Twilight Arcade", imageId: "twilight-image", contentType: "image/png", src: `${service.origin}/api/system/images/inline/twilight-image?cap=${capabilities[0]}` },
-            { role: "character_reference", alterId: "potts-id", alterName: "Potts Arcade", imageId: "potts-image", contentType: "image/png", src: `${service.origin}/api/system/images/inline/potts-image?cap=${capabilities[1]}` },
+            { role: "character_reference", alterId: "potts-id", alterName: "Potts Arcade", imageId: "potts-image", contentType: "image/png", src: `${service.origin}/api/system/images/inline/potts-image?cap=${capabilities[2]}` },
+            { role: "character_reference", alterId: "twilight-id", alterName: "Twilight Arcade", imageId: "twilight-one", contentType: "image/png", src: `${service.origin}/api/system/images/inline/twilight-one?cap=${capabilities[0]}` },
+            { role: "character_reference", alterId: "twilight-id", alterName: "Twilight Arcade", imageId: "twilight-two", contentType: "image/png", src: `${service.origin}/api/system/images/inline/twilight-two?cap=${capabilities[1]}` },
           ],
         },
       },
@@ -149,16 +150,18 @@ test("scene adapter gives a generator each canonical identity and local referenc
         callbackInput = input;
         assert.equal(await readFile(input.references[0].path, "utf8"), `synthetic-${capabilities[0]}`);
         assert.equal(await readFile(input.references[1].path, "utf8"), `synthetic-${capabilities[1]}`);
+        assert.equal(await readFile(input.references[2].path, "utf8"), `synthetic-${capabilities[2]}`);
         return { outputPath, contentType: "image/png", privateUrl: "must-not-escape" };
       },
     });
     assert.deepEqual(result, { outputPath, contentType: "image/png" });
     assert.deepEqual(callbackInput.characters, [
-      { alterId: "twilight-id", alterName: "Twilight Arcade", referenceImageId: "twilight-image" },
-      { alterId: "potts-id", alterName: "Potts Arcade", referenceImageId: "potts-image" },
+      { alterId: "twilight-id", alterName: "Twilight Arcade", referenceImageIds: ["twilight-one", "twilight-two"] },
+      { alterId: "potts-id", alterName: "Potts Arcade", referenceImageIds: ["potts-image"] },
     ]);
     assert.deepEqual(callbackInput.references.map(({ alterId, alterName, imageId, contentType }) => ({ alterId, alterName, imageId, contentType })), [
-      { alterId: "twilight-id", alterName: "Twilight Arcade", imageId: "twilight-image", contentType: "image/png" },
+      { alterId: "twilight-id", alterName: "Twilight Arcade", imageId: "twilight-one", contentType: "image/png" },
+      { alterId: "twilight-id", alterName: "Twilight Arcade", imageId: "twilight-two", contentType: "image/png" },
       { alterId: "potts-id", alterName: "Potts Arcade", imageId: "potts-image", contentType: "image/png" },
     ]);
     await assert.rejects(stat(dirname(callbackInput.references[0].path)), { code: "ENOENT" });
@@ -173,7 +176,7 @@ test("scene adapter gives a generator each canonical identity and local referenc
 test("scene adapter rejects incomplete metadata and sanitizes callback errors", async () => {
   await assert.rejects(
     generatePreparedFurryScene({
-      toolResult: { structuredContent: { ready: true, status: "READY", prompt: "scene", identities: [{ alterId: "a", alterName: "A", referenceImageId: "a-image" }, { alterId: "b", alterName: "B", referenceImageId: "b-image" }] }, _meta: { referenceMedia: [] } },
+      toolResult: { structuredContent: { ready: true, status: "READY", prompt: "scene", identities: [{ alterId: "a", alterName: "A", referenceImageIds: ["a-image"] }, { alterId: "b", alterName: "B", referenceImageIds: ["b-image"] }] }, _meta: { referenceMedia: [] } },
       generateScene: async () => ({ outputPath: "/tmp/nope.png" }),
     }),
     { message: "Prepared scene is missing a canonical character reference." },
@@ -194,7 +197,7 @@ test("scene adapter rejects incomplete metadata and sanitizes callback errors", 
     await assert.rejects(
       generatePreparedFurryScene({
         toolResult: {
-          structuredContent: { ready: true, status: "PREPARED", prompt: "scene", identities: [{ alterId: "a", alterName: "A", referenceImageId: "a-image" }, { alterId: "b", alterName: "B", referenceImageId: "b-image" }] },
+          structuredContent: { ready: true, status: "PREPARED", prompt: "scene", identities: [{ alterId: "a", alterName: "A", referenceImageIds: ["a-image"] }, { alterId: "b", alterName: "B", referenceImageIds: ["b-image"] }] },
           _meta: { referenceMedia: [
             { role: "character_reference", alterId: "a", alterName: "A", imageId: "a-image", contentType: "image/png", src: `${service.origin}/api/system/images/inline/a-image?cap=${secret}` },
             { role: "character_reference", alterId: "b", alterName: "B", imageId: "b-image", contentType: "image/png", src: `${service.origin}/api/system/images/inline/b-image?cap=${secret}` },
@@ -219,7 +222,7 @@ test("CLI scene materialization validates the full prepared packet and never ech
   assert.notEqual(developmentMalformed.code, 0);
   assert.doesNotMatch(`${developmentMalformed.stdout}${developmentMalformed.stderr}`, /do-not-print/);
 
-  const missing = await runBridge({ action: "materialize-scene", toolResult: { structuredContent: { ready: true, status: "READY", prompt: "scene", identities: [{ alterId: "a", alterName: "A", referenceImageId: "a-image" }] }, _meta: { referenceMedia: [] } } });
+  const missing = await runBridge({ action: "materialize-scene", toolResult: { structuredContent: { ready: true, status: "READY", prompt: "scene", identities: [{ alterId: "a", alterName: "A", referenceImageIds: ["a-image"] }] }, _meta: { referenceMedia: [] } } });
   assert.notEqual(missing.code, 0);
   assert.equal(missing.stdout, "");
 
@@ -236,7 +239,7 @@ test("CLI scene materialization validates the full prepared packet and never ech
           ready: true,
           status: "READY",
           prompt: "Twilight Arcade is broing out.",
-          identities: [{ alterId: "twilight-id", alterName: "Twilight Arcade", referenceImageId: "twilight-image" }],
+          identities: [{ alterId: "twilight-id", alterName: "Twilight Arcade", referenceImageIds: ["twilight-image"] }],
         },
         _meta: {
           referenceMedia: [{ role: "character_reference", alterId: "twilight-id", alterName: "Twilight Arcade", imageId: "twilight-image", contentType: "image/png", src: `${service.origin}/api/system/images/inline/twilight-image?cap=scene-capability` }],
@@ -247,7 +250,7 @@ test("CLI scene materialization validates the full prepared packet and never ech
     assert.doesNotMatch(materialized.stdout, /scene-capability/);
     const handoff = JSON.parse(materialized.stdout);
     assert.equal(handoff.prompt, "Twilight Arcade is broing out.");
-    assert.deepEqual(handoff.identities, [{ alterId: "twilight-id", alterName: "Twilight Arcade", referenceImageId: "twilight-image" }]);
+    assert.deepEqual(handoff.identities, [{ alterId: "twilight-id", alterName: "Twilight Arcade", referenceImageIds: ["twilight-image"] }]);
     assert.deepEqual(handoff.references.map(({ alterId, alterName, imageId, contentType }) => ({ alterId, alterName, imageId, contentType })), [{ alterId: "twilight-id", alterName: "Twilight Arcade", imageId: "twilight-image", contentType: "image/png" }]);
     await runBridge({ action: "cleanup", directory: handoff.directory });
   } finally {
@@ -268,7 +271,7 @@ test("scene materialization rejects a valid capability URL wired to another imag
     await assert.rejects(
       generatePreparedFurryScene({
         toolResult: {
-          structuredContent: { ready: true, status: "READY", prompt: "scene", identities: [{ alterId: "a", alterName: "A", referenceImageId: "a-image" }] },
+          structuredContent: { ready: true, status: "READY", prompt: "scene", identities: [{ alterId: "a", alterName: "A", referenceImageIds: ["a-image"] }] },
           _meta: { referenceMedia: [{ role: "character_reference", alterId: "a", alterName: "A", imageId: "a-image", contentType: "image/png", src: `${service.origin}/api/system/images/inline/b-image?cap=valid-but-wrong` }] },
         },
         generateScene: async () => ({ outputPath: "/tmp/not-used.png" }),
@@ -294,7 +297,7 @@ test("scene adapter rejects a reference file as output and still cleans up", asy
     await assert.rejects(
       generatePreparedFurryScene({
         toolResult: {
-          structuredContent: { ready: true, status: "READY", prompt: "scene", identities: [{ alterId: "a", alterName: "A", referenceImageId: "a-image" }] },
+          structuredContent: { ready: true, status: "READY", prompt: "scene", identities: [{ alterId: "a", alterName: "A", referenceImageIds: ["a-image"] }] },
           _meta: { referenceMedia: [{ role: "character_reference", alterId: "a", alterName: "A", imageId: "a-image", contentType: "image/png", src: `${service.origin}/api/system/images/inline/a-image?cap=temporary-reference` }] },
         },
         generateScene: async ({ references }) => {

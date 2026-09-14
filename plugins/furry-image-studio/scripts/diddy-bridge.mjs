@@ -55,6 +55,16 @@ function requiredString(value, label) {
   return value;
 }
 
+function canonicalReferenceImageIds(identity) {
+  const values = Array.isArray(identity?.referenceImageIds)
+    ? identity.referenceImageIds
+    : [identity?.referenceImageId];
+  if (values.length < 1) throw safeError("Prepared scene requires canonical reference image IDs.");
+  const imageIds = values.map((value) => requiredString(value, "scene reference image ID"));
+  if (new Set(imageIds).size !== imageIds.length) throw safeError("Prepared scene contains duplicate reference image IDs.");
+  return imageIds;
+}
+
 function preparedScene(toolResult) {
   const structured = toolResult?.structuredContent;
   const referenceMedia = toolResult?._meta?.referenceMedia;
@@ -76,21 +86,30 @@ function preparedScene(toolResult) {
   const characters = identities.map((identity) => ({
     alterId: requiredString(identity?.alterId, "scene alter ID"),
     alterName: requiredString(identity?.alterName, "scene alter name"),
-    referenceImageId: requiredString(identity?.referenceImageId, "scene reference image ID"),
+    referenceImageIds: canonicalReferenceImageIds(identity),
   }));
   const expectedIds = new Set(characters.map(({ alterId }) => alterId));
   if (expectedIds.size !== characters.length) throw safeError("Prepared scene contains duplicate alter IDs.");
 
-  const referencesByAlterId = new Map();
+  const referencesByIdentityAndImage = new Map();
+  const expectedReferences = new Map();
+  for (const character of characters) {
+    for (const imageId of character.referenceImageIds) {
+      expectedReferences.set(`${character.alterId}:${imageId}`, character);
+    }
+  }
   for (const reference of referenceMedia) {
     const alterId = requiredString(reference?.alterId, "reference alter ID");
     const alterName = requiredString(reference?.alterName, "reference alter name");
     const imageId = requiredString(reference?.imageId, "reference image ID");
-    if (reference?.role !== "character_reference" || !expectedIds.has(alterId)) {
+    const identityKey = `${alterId}:${imageId}`;
+    if (reference?.role !== "character_reference" || !expectedIds.has(alterId) || !expectedReferences.has(identityKey)) {
       throw safeError("Prepared scene has an unsupported character reference.");
     }
-    if (referencesByAlterId.has(alterId)) throw safeError("Prepared scene has duplicate character references.");
-    referencesByAlterId.set(alterId, {
+    if (referencesByIdentityAndImage.has(identityKey)) throw safeError("Prepared scene has duplicate character references.");
+    const character = expectedReferences.get(identityKey);
+    if (alterName !== character.alterName) throw safeError("Prepared scene reference identity did not match its canonical character.");
+    referencesByIdentityAndImage.set(identityKey, {
       role: reference.role,
       alterId,
       alterName,
@@ -99,16 +118,14 @@ function preparedScene(toolResult) {
       src: reference.src,
     });
   }
-  if (referencesByAlterId.size !== expectedIds.size) {
+  if (referencesByIdentityAndImage.size !== expectedReferences.size) {
     throw safeError("Prepared scene is missing a canonical character reference.");
   }
-  for (const character of characters) {
-    const reference = referencesByAlterId.get(character.alterId);
-    if (!reference || reference.alterName !== character.alterName || reference.imageId !== character.referenceImageId) {
-      throw safeError("Prepared scene reference identity did not match its canonical character.");
-    }
-  }
-  return { prompt: prompt.trim(), characters, referenceMedia: characters.map(({ alterId }) => referencesByAlterId.get(alterId)) };
+  return {
+    prompt: prompt.trim(),
+    characters,
+    referenceMedia: characters.flatMap(({ alterId, referenceImageIds }) => referenceImageIds.map((imageId) => referencesByIdentityAndImage.get(`${alterId}:${imageId}`))),
+  };
 }
 
 async function readOneLine() {

@@ -18,12 +18,13 @@ profile picture.
   Proceed only when its full tool result has `isError !== true`,
   `structuredContent.ready === true`, and status `READY` or `PREPARED`.
 - The public structured content must contain `prompt` and ordered `identities`
-  with `alterId`, `alterName`, and `referenceImageId`. `_meta.referenceMedia`
+with `alterId`, `alterName`, and ordered `referenceImageIds`. `_meta.referenceMedia`
   contains the corresponding private `src` values and is never placed in a
   prompt, shell argument, transcript, user-facing output, or callback input.
-- Require exactly one `character_reference` per canonical identity, matching
-  alter ID, alter name, and reference image ID. Missing, duplicate, or
-  mismatched references are a preparation failure.
+- Require exactly one `character_reference` per canonical reference image,
+  matching alter ID, alter name, and image ID. Preserve the order of every
+  character's `referenceImageIds`; missing, duplicate, or mismatched references
+  are a preparation failure.
 
 ## Codex host handoff
 
