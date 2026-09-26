@@ -74,6 +74,39 @@ person to transform and the requested character/style. The installed skills
 will use the character and style profiles to make a subject-only edit when
 `toon-in-real-world` is selected.
 
+### Personalized reaction sticker packs
+
+Say something like:
+
+```text
+Make me a ten-reaction sticker pack.
+```
+
+The `make-sticker-pack` skill deliberately separates acting from character rendering:
+
+1. Interview for personality, communication habits, cultural gestures, signed language, text preferences, and things to avoid.
+2. Present the ten default semantic reaction slots for approval as an editable prompt board.
+3. Generate a cheap blocking pass using rough poses instead of polished character art.
+4. Repair only the selected sticker while freezing the other nine.
+5. Ask for or resolve the final character reference only after the poses are approved.
+6. Render the character pass, then repair individual final stickers as needed.
+7. Optionally publish the approved static set to Telegram with the local helper.
+
+The default semantic set is yes, no, applause, thanks, sorry, laugh, love, confused, congrats, and bye. These are intents rather than fixed gestures, so the skill can direct an ASL sign, bow, deadpan stare, tail gesture, or other subject-specific performance instead of forcing stock emoji poses.
+
+For Telegram publishing, create a bot with BotFather and set its token outside chat:
+
+```bash
+export TELEGRAM_BOT_TOKEN="<your-token>"
+node scripts/telegram-stickers.mjs create \
+  --user-id <telegram-user-id> \
+  --name <pack_name_by_bot> \
+  --title "My Sticker Pack" \
+  --input <manifest.json>
+```
+
+Never paste the bot token into a prompt or commit it to the repository. If the host cannot execute local scripts, the skill stops at a Telegram-ready manifest instead of claiming publication succeeded.
+
 ### Private DIDdy alter handoff
 
 When an authenticated DIDdy connector and the deployed System Companion bridge
