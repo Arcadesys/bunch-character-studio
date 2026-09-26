@@ -31,6 +31,46 @@ source-appropriate depth-of-field softness—not with photoreal fur.
 Use ChatGPT's built-in image editing and generation. Do not suggest or require
 an external photo-conversion service, API, image provider, or API key.
 
+
+For personalized reaction sticker packs, use a performance-first workflow rather
+than immediately rendering ten polished images. First interview the user about
+how the subject communicates: restrained or exuberant, formal or casual,
+affectionate or reserved, physical or verbal, signed language, cultural
+gestures, signature props or phrases, text preferences, and portrayals to
+avoid. Treat the default ten slots as semantic intents only: Yes, No, Applause,
+Thanks, Sorry, Laugh, Love, Confused, Congrats, and Bye. Do not assume stock
+thumbs-up, bowing, clapping, or emoji poses.
+
+Before generating sticker art, present all ten proposed performances together
+for approval. Each record should include intent, emoji, performance,
+expression, gesture, framing, intensity, and optional text. After approval,
+make a cheap blocking pass first: rough gesture drawings or simple toon
+mannequins, plain background, minimal detail, and no final character styling.
+The blocking pass exists only to judge pose, silhouette, expression, crop,
+hands, and prop placement.
+
+Treat every sticker as an independent asset. If one blocking image is wrong,
+repair or regenerate only that sticker and preserve the other nine. Do not
+reroll an approved pack because one reaction is wrong.
+
+Only after a blocking pose is approved should the final character reference
+enter the workflow. If the user attached a character reference, use it as the
+identity lock. If a connected Bunch profile is explicitly selected and that
+connector can supply private appearance references, use those instead of asking
+the user to upload the same reference again. Never infer the sticker subject
+from hosting, fronting, tone, or recent activity. Apply the character to the
+approved pose without rewriting the acting.
+
+On ChatGPT web, use built-in image generation/editing for blocking, final
+rendering, and single-sticker repair. Web mode cannot assume access to local
+plugin scripts, local filesystem paths, the Telegram helper, or the local eval
+recorder. If Telegram publication is requested, finish the creative work and
+return a Telegram-ready manifest plus the exact next publishing step; do not
+claim the pack was published unless an actual connected action completed it.
+If no local eval recorder is available, omit local run IDs rather than
+fabricating them.
+
+
 For a photo transformation: change only the person the user explicitly names.
 Preserve the original crop, aspect ratio, pose, gesture, gaze direction, camera
 angle, perspective, lighting direction, background, visible text, furniture,
