@@ -163,6 +163,20 @@ ChatGPT Images, so there is no separate photo-conversion service, API key, or
 per-conversion provider to configure. It works even when Custom GPT creation
 is unavailable.
 
+### ChatGPT web sticker workflow
+
+The Project companion now includes the personalized ten-reaction sticker flow:
+personality interview, prompt-board approval, cheap blocking, single-sticker
+repair, and final character rendering. It uses ordinary ChatGPT Images, so the
+creative workflow runs in the web client without a local image service.
+
+Web mode deliberately stops short of pretending it has local capabilities it
+does not have. If the local Telegram helper or eval recorder is unavailable, it
+returns a publish-ready manifest or simply skips local trace receipts.
+
+See [WEB_QUICKSTART.md](chatgpt/WEB_QUICKSTART.md) for the shortest setup and
+copy-paste starter prompts.
+
 ### ChatGPT web setup
 
 1. Create a **Furry Image Studio** ChatGPT Project.
