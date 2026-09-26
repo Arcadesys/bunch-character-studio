@@ -1,7 +1,7 @@
 {
   "name": "furry-image-studio",
-  "version": "0.1.0+codex.20260913010000",
-  "description": "Codex / ChatGPT Desktop skill plugin for furry and anthro character image generation.",
+  "version": "0.1.0+codex.20260925200000",
+  "description": "Codex / ChatGPT Desktop skill plugin for furry and anthro character image generation, repair, and personalized sticker packs.",
   "author": {
     "name": "Arcadesys",
     "url": "https://github.com/Arcadesys"
@@ -13,14 +13,16 @@
     "chatgpt-desktop",
     "skills",
     "image-generation",
+    "stickers",
+    "telegram",
     "furry",
     "anthro"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Furry Image Studio",
-    "shortDescription": "Generate and edit furry character images.",
-    "longDescription": "Furry Image Studio is a Codex / ChatGPT Desktop skill plugin that lets Codex use arbitrary user-added character profiles and rendering style profiles for furry, anthro, toon-in-real-world, anime, cartoon, and photoreal image work. It can also route an explicitly named private DIDdy alter through an installed local bridge without publishing private references.",
+    "shortDescription": "Generate, repair, and turn characters into sticker packs.",
+    "longDescription": "Furry Image Studio is a Codex / ChatGPT Desktop skill plugin for character generation, targeted image repair, transformations, and personalized reaction sticker packs. The sticker workflow interviews for communication style, approves ten reaction performances, blocks poses cheaply, repairs one sticker at a time, applies character references only after pose approval, and can publish approved static sets to Telegram from a local helper. It can also route an explicitly named private DIDdy alter through an installed local bridge without publishing private references.",
     "developerName": "Arcadesys",
     "category": "Productivity",
     "capabilities": [
@@ -28,10 +30,12 @@
       "image editing",
       "character profiles",
       "style profiles",
+      "personalized sticker packs",
+      "Telegram sticker publishing",
       "private DIDdy bridge"
     ],
     "websiteURL": "https://github.com/Arcadesys/furry-image-studio",
     "logo": "./assets/plugin-logo.png",
-    "defaultPrompt": "Help me create or transform a furry character image. With an attached snapshot, I can also make you an explicitly named DIDdy alter."
+    "defaultPrompt": "Help me create, transform, or repair a furry character image, or make a personalized ten-reaction sticker pack."
   }
 }
