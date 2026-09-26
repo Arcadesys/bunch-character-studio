@@ -19,6 +19,7 @@
     "judge:run": "node evals/judges/codex/cli.mjs run",
     "judge:compare": "node evals/judges/codex/cli.mjs compare",
     "judge:all": "node evals/judges/codex/cli.mjs all",
-    "judge:test": "node --test evals/judges/codex/*.test.mjs"
+    "judge:test": "node --test evals/judges/codex/*.test.mjs",
+    "telegram:stickers:test": "node --test plugins/furry-image-studio/scripts/telegram-stickers.test.mjs"
   }
 }
