@@ -1,6 +1,6 @@
 ---
 name: add-furry-style
-description: Add or update a reusable Furry Image Studio rendering style such as toon-in-real-world, photorealism, cartoon-world, anime, storybook, sticker, painterly, comic, or another user-defined style.
+description: Add or update a reusable Bunch: Character Studio rendering style such as toon-in-real-world, photorealism, cartoon-world, anime, storybook, sticker, painterly, comic, or another user-defined style.
 ---
 
 # Add Furry Style

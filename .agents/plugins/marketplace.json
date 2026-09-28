@@ -1,14 +1,14 @@
 {
-  "name": "furry-image-studio",
+  "name": "bunch-character-studio",
   "interface": {
-    "displayName": "Furry Image Studio"
+    "displayName": "Bunch: Character Studio"
   },
   "plugins": [
     {
-      "name": "furry-image-studio",
+      "name": "bunch-character-studio",
       "source": {
         "source": "local",
-        "path": "./plugins/furry-image-studio"
+        "path": "./plugins/bunch-character-studio"
       },
       "policy": {
         "installation": "AVAILABLE",

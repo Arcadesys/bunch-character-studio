@@ -202,7 +202,7 @@ export async function prepareCalibration({
 
   const preparedAt = now().toISOString();
   const defaultRoot = resolve(
-    ".furry-image-studio",
+    ".bunch-character-studio",
     "judge-runs",
     `${timestamp(now())}-${slugify(manifest.title ?? "judge-run")}`,
   );

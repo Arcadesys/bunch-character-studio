@@ -1,6 +1,6 @@
 ---
 name: transform-person-to-character
-description: Transform a selected person in an uploaded or referenced photo into an arbitrary Furry Image Studio character while preserving the photo, pose, crop, background, objects, text, and other people. Use for toon-in-real-world fursona edits, character transformations, and identity-preserve image edits.
+description: Transform a selected person in an uploaded or referenced photo into an arbitrary Bunch: Character Studio character while preserving the photo, pose, crop, background, objects, text, and other people. Use for toon-in-real-world fursona edits, character transformations, and identity-preserve image edits.
 ---
 
 # Transform Person To Character

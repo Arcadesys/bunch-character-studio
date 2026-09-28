@@ -2,7 +2,7 @@
 
 ## One-time project setup
 
-1. Create a ChatGPT Project named **Furry Image Studio**.
+1. Create a ChatGPT Project named **Bunch: Character Studio**.
 2. Upload `PROJECT_LIBRARY.md` as a project file.
 3. In Project settings, paste the text from `PROJECT_INSTRUCTIONS.md`.
 4. Keep new transformation chats inside this Project. Its files, instructions,
@@ -10,7 +10,7 @@
 
 ## On Android
 
-1. Open the **Furry Image Studio** Project, then start a chat in it.
+1. Open the **Bunch: Character Studio** Project, then start a chat in it.
 2. Attach the real photo. Attach character-reference images too when you have
    them.
 3. Name the person and character naturally: for example, “Turn me into Testy Taupin

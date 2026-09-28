@@ -1,17 +1,17 @@
 {
-  "name": "furry-image-studio-workspace",
+  "name": "bunch-character-studio-workspace",
   "private": true,
   "version": "0.1.0",
   "workspaces": [
     "apps/trace-review"
   ],
   "scripts": {
-    "review:dev": "npm run dev --workspace @furry-image-studio/trace-review",
-    "review:build": "npm run build --workspace @furry-image-studio/trace-review",
-    "review:start": "npm run start --workspace @furry-image-studio/trace-review",
-    "review:test": "npm run test --workspace @furry-image-studio/trace-review",
-    "review:test:ui": "npm run test:ui --workspace @furry-image-studio/trace-review",
-    "review:typecheck": "npm run typecheck --workspace @furry-image-studio/trace-review",
+    "review:dev": "npm run dev --workspace @bunch-character-studio/trace-review",
+    "review:build": "npm run build --workspace @bunch-character-studio/trace-review",
+    "review:start": "npm run start --workspace @bunch-character-studio/trace-review",
+    "review:test": "npm run test --workspace @bunch-character-studio/trace-review",
+    "review:test:ui": "npm run test:ui --workspace @bunch-character-studio/trace-review",
+    "review:typecheck": "npm run typecheck --workspace @bunch-character-studio/trace-review",
     "eval:record": "node scripts/record_eval_run.mjs",
     "eval:record:test": "node --test scripts/record_eval_run.test.mjs && tsx --test scripts/record_eval_run.integration.test.mts",
     "diddy:bridge:test": "node --test scripts/diddy-bridge.test.mjs",
@@ -20,6 +20,6 @@
     "judge:compare": "node evals/judges/codex/cli.mjs compare",
     "judge:all": "node evals/judges/codex/cli.mjs all",
     "judge:test": "node --test evals/judges/codex/*.test.mjs",
-    "telegram:stickers:test": "node --test plugins/furry-image-studio/scripts/telegram-stickers.test.mjs"
+    "telegram:stickers:test": "node --test plugins/bunch-character-studio/scripts/telegram-stickers.test.mjs"
   }
 }

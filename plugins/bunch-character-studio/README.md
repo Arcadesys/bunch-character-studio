@@ -1,11 +1,11 @@
-# Furry Image Studio
+# Bunch: Character Studio
 
 **Reusable AI character-transformation tools for Codex and ChatGPT.**
 
-Furry Image Studio is an installable Codex / ChatGPT Desktop plugin that turns
-furry, anthro, toon, and creature image workflows into reusable skills with
-character-identity profiles, rendering-style profiles, validation, and
-multimodal evaluation.
+Bunch: Character Studio is an installable Codex / ChatGPT Desktop plugin for
+reusable character definitions, image generation, repair, and sticker work.
+Characters can be human, furry, anthro, toon, or creatures. Identity profiles,
+rendering styles, references, and evaluation evidence stay separate.
 
 Character identity stays separate from rendering style, so the same character
 can move across visual treatments without losing canon. The skills support new
@@ -34,7 +34,7 @@ Furry identity is deeply visual, but seeing yourself as your fursona can require
 access to commissioned artwork or a fursuit—both meaningful forms of expression
 that can also be expensive.
 
-Furry Image Studio explores a more accessible entry point: a small convention
+Bunch: Character Studio explores a more accessible entry point: a small convention
 photo booth where someone can take a picture and receive an image of themselves
 as their character—preserving the person, pose, clothing, and moment while
 transforming their appearance.
@@ -52,8 +52,8 @@ The public marketplace is this repository. A fresh Codex harness can install
 the published plugin with these two commands:
 
 ```bash
-codex plugin marketplace add Arcadesys/furry-image-studio
-codex plugin add furry-image-studio@furry-image-studio
+codex plugin marketplace add Arcadesys/bunch-character-studio
+codex plugin add bunch-character-studio@bunch-character-studio
 ```
 
 Start a new Codex or ChatGPT Desktop task after installation so it loads the
@@ -63,8 +63,8 @@ new skills. Confirm the install with:
 codex plugin list
 ```
 
-The expected entry is `furry-image-studio` from the
-`furry-image-studio` marketplace. No API key, MCP server, or companion app is
+The expected entry is `bunch-character-studio` from the
+`bunch-character-studio` marketplace. No API key, MCP server, or companion app is
 required to use the public plugin.
 
 ### Use it in Desktop
@@ -119,14 +119,14 @@ fronting, or promote a profile picture.
 
 The installed package includes `scripts/diddy-bridge.mjs`, a local adapter that
 receives DIDdy's capability metadata only programmatically on stdin. It writes
-temporary private reference files, records the normal Furry Image Studio eval
+temporary private reference files, records the normal Bunch: Character Studio eval
 trace before cleanup, and can save a user-selected keeper through DIDdy's
 request-bound private-gallery receipt. It never prints bearer URLs or
 capabilities. A host without a supported metadata-to-attachment handoff must
 return `HOST_ADAPTER_REQUIRED`; it must not claim a transformation occurred.
 
 This bridge is intentionally not a substitute for an attached source snapshot
-or a live DIDdy connector. The ordinary Furry Image Studio transformation rules
+or a live DIDdy connector. The ordinary Bunch: Character Studio transformation rules
 remain the source of truth for image composition, preservation, and anatomy.
 
 ### Private DIDdy multi-character scenes
@@ -146,14 +146,14 @@ Paste this into a ChatGPT Desktop task when you want its Codex harness to
 install the plugin for you:
 
 ```text
-Install Furry Image Studio from its public Codex marketplace in this ChatGPT Desktop installation.
+Install Bunch: Character Studio from its public Codex marketplace in this ChatGPT Desktop installation.
 
 Run:
-codex plugin marketplace add Arcadesys/furry-image-studio
-codex plugin add furry-image-studio@furry-image-studio
+codex plugin marketplace add Arcadesys/bunch-character-studio
+codex plugin add bunch-character-studio@bunch-character-studio
 codex plugin list
 
-Confirm that `furry-image-studio` is installed from the `furry-image-studio` marketplace. Do not configure the optional private eval MCP service or request an API key. When installation succeeds, tell me to start a new ChatGPT Desktop task so its Furry Image Studio skills are available.
+Confirm that `bunch-character-studio` is installed from the `bunch-character-studio` marketplace. Do not configure the optional private eval MCP service or request an API key. When installation succeeds, tell me to start a new ChatGPT Desktop task so its Bunch: Character Studio skills are available.
 ```
 
 ## ChatGPT web and Android — Project companion
@@ -165,21 +165,26 @@ is unavailable.
 
 ### ChatGPT web sticker workflow
 
-The Project companion includes the personalized ten-reaction sticker flow:
+The Project companion now includes the personalized ten-reaction sticker flow:
 personality interview, prompt-board approval, cheap blocking, single-sticker
-repair, and final character rendering. It uses ordinary ChatGPT Images in web
-mode and does not pretend local publishing or eval scripts are available.
+repair, and final character rendering. It uses ordinary ChatGPT Images, so the
+creative workflow runs in the web client without a local image service.
 
-See the repository's `chatgpt/WEB_QUICKSTART.md` for setup.
+Web mode deliberately stops short of pretending it has local capabilities it
+does not have. If the local Telegram helper or eval recorder is unavailable, it
+returns a publish-ready manifest or simply skips local trace receipts.
+
+See [WEB_QUICKSTART.md](chatgpt/WEB_QUICKSTART.md) for the shortest setup and
+copy-paste starter prompts.
 
 ### ChatGPT web setup
 
-1. Create a **Furry Image Studio** ChatGPT Project.
+1. Create a **Bunch: Character Studio** ChatGPT Project.
 2. Add
-[`PROJECT_LIBRARY.md`](https://github.com/Arcadesys/furry-image-studio/blob/main/chatgpt/PROJECT_LIBRARY.md)
+[`PROJECT_LIBRARY.md`](https://github.com/Arcadesys/bunch-character-studio/blob/main/chatgpt/PROJECT_LIBRARY.md)
 as a project file.
 3. In Project settings, paste
-[`PROJECT_INSTRUCTIONS.md`](https://github.com/Arcadesys/furry-image-studio/blob/main/chatgpt/PROJECT_INSTRUCTIONS.md)
+[`PROJECT_INSTRUCTIONS.md`](https://github.com/Arcadesys/bunch-character-studio/blob/main/chatgpt/PROJECT_INSTRUCTIONS.md)
 into the project instructions.
 4. Start transformation chats inside that Project. It becomes a durable
    character library: profiles are resolved by their name or alias in natural
@@ -190,7 +195,7 @@ into the project instructions.
 Open that same Project in the Android app. Attach the real photo and any
 character-reference images, then say what you want naturally—for example,
 “Turn me into Testy Taupin in Toon in Real World style.”
-[`MOBILE_QUICKSTART.md`](https://github.com/Arcadesys/furry-image-studio/blob/main/chatgpt/MOBILE_QUICKSTART.md)
+[`MOBILE_QUICKSTART.md`](https://github.com/Arcadesys/bunch-character-studio/blob/main/chatgpt/MOBILE_QUICKSTART.md)
 has the short setup and ready-to-use starters. When a new character is added or
 revised in the Project, ChatGPT returns a replacement library entry; paste it
 into the project file to make the exact canon durable.
@@ -198,14 +203,14 @@ into the project file to make the exact canon durable.
 For a local checkout, use its absolute path as the marketplace root:
 
 ```bash
-git clone https://github.com/Arcadesys/furry-image-studio.git
-cd furry-image-studio
+git clone https://github.com/Arcadesys/bunch-character-studio.git
+cd bunch-character-studio
 codex plugin marketplace add "$PWD"
-codex plugin add furry-image-studio@furry-image-studio
+codex plugin add bunch-character-studio@bunch-character-studio
 ```
 
 After changing the packaged plugin, give
-`plugins/furry-image-studio/.codex-plugin/plugin.json` a new cache-busted
+`plugins/bunch-character-studio/.codex-plugin/plugin.json` a new cache-busted
 version and reinstall it. Start a new task to test the changed skills.
 
 ## How the repository works
@@ -214,12 +219,12 @@ The repository has two intentional layers:
 
 ```text
 .agents/plugins/marketplace.json  -> marketplace entry for Codex
-plugins/furry-image-studio/        -> exact directory Codex installs
+plugins/bunch-character-studio/        -> exact directory Codex installs
 assets/, skills/, scripts/         -> canonical authoring copy
 services/eval-mcp/                 -> optional private trace service
 ```
 
-`plugins/furry-image-studio/` is the release package named by the marketplace.
+`plugins/bunch-character-studio/` is the release package named by the marketplace.
 The root `assets/`, `skills/`, manifest, and README are the canonical authoring
 copy and must match their counterparts in that package. The eval recorder is
 the intentional exception: the root `scripts/record_eval_run.mjs` is a thin
@@ -299,7 +304,7 @@ contract. GitHub Actions runs the same checks on pushes and pull requests.
 
 ## Evaluate accepted images consistently
 
-Furry Image Studio evaluates existing, accepted source/output pairs; it never
+Bunch: Character Studio evaluates existing, accepted source/output pairs; it never
 generates an image just to make an eval. From this checkout, use:
 
 ```bash
@@ -315,7 +320,7 @@ the blind Codex judge is calibrated. See
 [the eval protocol](evals/EVAL_PROTOCOL.md) for the small-set recipe, evidence
 rules, and review-to-judge flow.
 
-Automatic recording is enabled for Furry Image Studio outputs. Every output
+Automatic recording is enabled for Bunch: Character Studio outputs. Every output
 with a genuine visual source, local output file, and exact prompt is recorded
 immediately; transformations use their original photo and repairs use their
 immediate parent. Pure text-only generations remain explicitly unrecordable in
@@ -335,6 +340,11 @@ python3 scripts/new_character.py "My Character" \
 
 Add reference images under `assets/characters/<character-id>/references/`,
 then list their relative paths in that character's `reference_images` field.
+The helper also creates `evals/cases.md`, `goldens/`, and `failures/` for that
+character. Customize the pending cases with visible pass criteria. Add only
+creator-approved results to `goldens/` and actual reviewed defects to
+`failures/`, with the model, prompt, source, and decision recorded. The
+character's `character.md` remains the identity source used by generation.
 
 ## Character controls
 

@@ -18,7 +18,7 @@ test("build contains the Trace Review product shell", async () => {
     readFile(new URL(`../dist/client/${clientPagePath}`, import.meta.url), "utf8"),
   ]);
   const build = `${worker}\n${serverPage}\n${clientPage}`;
-  assert.match(build, /Furry Image Studio Trace Review/);
+  assert.match(build, /Bunch: Character Studio Trace Review/);
   assert.match(build, /Loading review sets/);
   assert.match(build, /evals\/outputs/);
   assert.doesNotMatch(build, /codex-preview|Your site is taking shape|react-loading-skeleton/i);

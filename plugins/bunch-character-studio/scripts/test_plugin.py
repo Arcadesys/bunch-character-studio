@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Release-contract tests for the public Furry Image Studio plugin."""
+"""Release-contract tests for the public Bunch: Character Studio plugin."""
 
 from __future__ import annotations
 
@@ -7,12 +7,13 @@ import json
 import pathlib
 import subprocess
 import sys
+import tempfile
 import unittest
 
 
 PLUGIN_ROOT = pathlib.Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = PLUGIN_ROOT if (PLUGIN_ROOT / ".agents").is_dir() else PLUGIN_ROOT.parents[1]
-PACKAGE = REPOSITORY_ROOT / "plugins" / "furry-image-studio"
+PACKAGE = REPOSITORY_ROOT / "plugins" / "bunch-character-studio"
 if not PACKAGE.is_dir():
     PACKAGE = PLUGIN_ROOT
 MARKETPLACE = REPOSITORY_ROOT / ".agents" / "plugins" / "marketplace.json"
@@ -32,16 +33,16 @@ class PluginReleaseContractTests(unittest.TestCase):
         if not MARKETPLACE.is_file():
             self.skipTest("standalone installed plugin has no repository marketplace")
         marketplace = json.loads(MARKETPLACE.read_text(encoding="utf-8"))
-        self.assertEqual(marketplace["name"], "furry-image-studio")
+        self.assertEqual(marketplace["name"], "bunch-character-studio")
         self.assertEqual(len(marketplace["plugins"]), 1)
         entry = marketplace["plugins"][0]
-        self.assertEqual(entry["name"], "furry-image-studio")
-        self.assertEqual(entry["source"], {"source": "local", "path": "./plugins/furry-image-studio"})
+        self.assertEqual(entry["name"], "bunch-character-studio")
+        self.assertEqual(entry["source"], {"source": "local", "path": "./plugins/bunch-character-studio"})
         self.assertEqual(entry["policy"], {"installation": "AVAILABLE", "authentication": "ON_INSTALL"})
 
     def test_manifest_declares_the_packaged_skills(self) -> None:
         manifest = json.loads((PACKAGE / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["name"], "furry-image-studio")
+        self.assertEqual(manifest["name"], "bunch-character-studio")
         self.assertTrue(manifest["version"])
         self.assertEqual(manifest["skills"], "./skills/")
         self.assertTrue(manifest["description"])
@@ -68,7 +69,7 @@ class PluginReleaseContractTests(unittest.TestCase):
         wrapper = REPOSITORY_ROOT / "scripts" / "record_eval_run.mjs"
         implementation = PACKAGE / "scripts" / "record_eval_run.mjs"
         wrapper_text = wrapper.read_text(encoding="utf-8")
-        self.assertIn("../plugins/furry-image-studio/scripts/record_eval_run.mjs", wrapper_text)
+        self.assertIn("../plugins/bunch-character-studio/scripts/record_eval_run.mjs", wrapper_text)
         self.assertIn("export async function recordEvalRun", implementation.read_text(encoding="utf-8"))
         root_help = subprocess.run(
             ["node", "scripts/record_eval_run.mjs", "--help"],
@@ -78,6 +79,31 @@ class PluginReleaseContractTests(unittest.TestCase):
         )
         package_help = subprocess.run(
             ["node", "scripts/record_eval_run.mjs", "--help"],
+            cwd=PACKAGE,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(root_help.returncode, 0, root_help.stderr)
+        self.assertEqual(package_help.returncode, 0, package_help.stderr)
+        self.assertEqual(root_help.stdout, package_help.stdout)
+
+    def test_diddy_bridge_has_matching_development_and_installed_entry_points(self) -> None:
+        """The installed package owns the private DIDdy adapter implementation."""
+        if PLUGIN_ROOT == PACKAGE:
+            self.skipTest("standalone installed plugin has no separate authoring copy")
+        wrapper = REPOSITORY_ROOT / "scripts" / "diddy-bridge.mjs"
+        implementation = PACKAGE / "scripts" / "diddy-bridge.mjs"
+        self.assertIn("../plugins/bunch-character-studio/scripts/diddy-bridge.mjs", wrapper.read_text(encoding="utf-8"))
+        self.assertIn("Private local adapter for the DIDdy", implementation.read_text(encoding="utf-8"))
+        self.assertIn("export async function generatePreparedFurryScene", implementation.read_text(encoding="utf-8"))
+        root_help = subprocess.run(
+            ["node", "scripts/diddy-bridge.mjs", "--help"],
+            cwd=REPOSITORY_ROOT,
+            capture_output=True,
+            text=True,
+        )
+        package_help = subprocess.run(
+            ["node", "scripts/diddy-bridge.mjs", "--help"],
             cwd=PACKAGE,
             capture_output=True,
             text=True,
@@ -114,6 +140,30 @@ class PluginReleaseContractTests(unittest.TestCase):
                     text=True,
                 )
                 self.assertEqual(help_result.returncode, 0, help_result.stderr)
+
+    def test_new_character_creates_reviewable_evidence_without_overwriting(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            scripts = root / "scripts"
+            scripts.mkdir()
+            creator = scripts / "new_character.py"
+            creator.write_bytes((PACKAGE / "scripts" / "new_character.py").read_bytes())
+            command = [
+                sys.executable, str(creator), "Sample Character", "--species", "fox",
+                "--trait", "red fur", "--trait", "white muzzle", "--trait", "black ears",
+            ]
+            created = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(created.returncode, 0, created.stderr)
+            character = root / "assets" / "characters" / "sample-character"
+            profile = character / "character.md"
+            self.assertIn("red fur", profile.read_text(encoding="utf-8"))
+            self.assertIn("pending", (character / "evals" / "cases.md").read_text(encoding="utf-8"))
+            self.assertTrue((character / "goldens" / "README.md").is_file())
+            self.assertTrue((character / "failures" / "README.md").is_file())
+            retried = subprocess.run(command, capture_output=True, text=True)
+            self.assertNotEqual(retried.returncode, 0)
+            self.assertIn("Refusing to overwrite", retried.stderr)
+            self.assertIn("red fur", profile.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

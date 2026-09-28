@@ -68,7 +68,7 @@ function validateReviewAgainstRubric(
 
 export async function createTraceReviewApp(options: AppOptions): Promise<TraceReviewApp> {
   const repoRoot = resolve(options.repoRoot);
-  const dataDir = resolve(options.dataDir ?? join(repoRoot, '.furry-image-studio'));
+  const dataDir = resolve(options.dataDir ?? join(repoRoot, '.bunch-character-studio'));
   const evalCasesDir = resolve(options.evalCasesDir ?? join(repoRoot, 'evals', 'cases'));
   await mkdir(dataDir, { recursive: true });
 

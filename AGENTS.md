@@ -8,6 +8,6 @@ make sync-release
 make test
 ```
 
-Commit the matching files under `plugins/furry-image-studio/` in the same
+Commit the matching files under `plugins/bunch-character-studio/` in the same
 commit. Do not blanket-copy `scripts/`: the root eval recorder is intentionally
 a thin development wrapper, while the packaged recorder is self-contained.

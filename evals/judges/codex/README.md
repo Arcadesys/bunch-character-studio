@@ -22,7 +22,7 @@ Prepare a calibration set:
 ```bash
 npm run judge:prepare -- \
   --bundle evals/cases/toon-mouse-20260729T000000000Z \
-  --out .furry-image-studio/judge-runs/mouse-v1 \
+  --out .bunch-character-studio/judge-runs/mouse-v1 \
   --holdout 0.25
 ```
 
@@ -30,7 +30,7 @@ Run the calibration partition with an explicit model:
 
 ```bash
 npm run judge:run -- \
-  --calibration .furry-image-studio/judge-runs/mouse-v1 \
+  --calibration .bunch-character-studio/judge-runs/mouse-v1 \
   --model gpt-5.4 \
   --partition calibration \
   --concurrency 2
@@ -40,15 +40,15 @@ The command prints an immutable attempt directory. Compare that attempt:
 
 ```bash
 npm run judge:compare -- \
-  --calibration .furry-image-studio/judge-runs/mouse-v1 \
-  --attempt .furry-image-studio/judge-runs/mouse-v1/attempts/<attempt>
+  --calibration .bunch-character-studio/judge-runs/mouse-v1 \
+  --attempt .bunch-character-studio/judge-runs/mouse-v1/attempts/<attempt>
 ```
 
 After freezing `judge-guidance.md`, run a new holdout attempt:
 
 ```bash
 npm run judge:run -- \
-  --calibration .furry-image-studio/judge-runs/mouse-v1 \
+  --calibration .bunch-character-studio/judge-runs/mouse-v1 \
   --model gpt-5.4 \
   --partition holdout
 ```

@@ -1,4 +1,4 @@
-# Furry Image Studio Project Library
+# Bunch: Character Studio Project Library
 
 This is generated from the canonical character and style profiles. Upload it to the matching ChatGPT Project after each profile update.
 

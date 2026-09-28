@@ -327,8 +327,8 @@ export function App({ logoUrl: providedLogoUrl }: AppProps = {}) {
           <Menu aria-hidden="true" />
         </button>
         <div className="brand">
-          {providedLogoUrl ? <img src={providedLogoUrl} alt="" /> : <span aria-hidden="true">FIS</span>}
-          <strong>Furry Image Studio</strong>
+          {providedLogoUrl ? <img src={providedLogoUrl} alt="" /> : <span aria-hidden="true">BCS</span>}
+          <strong>Bunch: Character Studio</strong>
           <span>Trace Review</span>
         </div>
         <div className="eval-source">

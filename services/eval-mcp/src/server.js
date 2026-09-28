@@ -18,7 +18,7 @@ function toolError(error) {
 }
 
 function makeServer(store) {
-  const server = new McpServer({ name: "furry-image-studio-eval", version: "0.1.0" });
+  const server = new McpServer({ name: "bunch-character-studio-eval", version: "0.1.0" });
   const mutationAnnotations = { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false };
   server.registerTool("create_eval_claim", {
     title: "Create external eval claim",
@@ -62,7 +62,7 @@ function makeServer(store) {
   return server;
 }
 
-export async function createEvalMcpApp({ storageRoot = process.env.EVAL_TRACE_STORAGE_ROOT || path.join(tmpdir(), "furry-image-studio-eval-trace-private"), serviceToken = process.env.EVAL_TRACE_SERVICE_TOKEN } = {}) {
+export async function createEvalMcpApp({ storageRoot = process.env.EVAL_TRACE_STORAGE_ROOT || path.join(tmpdir(), "bunch-character-studio-eval-trace-private"), serviceToken = process.env.EVAL_TRACE_SERVICE_TOKEN } = {}) {
   if (!serviceToken || serviceToken.length < 24) throw new Error("EVAL_TRACE_SERVICE_TOKEN must be configured with at least 24 characters.");
   const store = new TraceStore(storageRoot);
   await store.initialize();
@@ -100,5 +100,5 @@ export async function createEvalMcpApp({ storageRoot = process.env.EVAL_TRACE_ST
 if (import.meta.url === `file://${process.argv[1]}`) {
   const { app } = await createEvalMcpApp();
   const port = Number(process.env.PORT || 3300);
-  app.listen(port, () => console.log(`Furry Image Studio eval MCP listening on http://127.0.0.1:${port}/mcp`));
+  app.listen(port, () => console.log(`Bunch: Character Studio eval MCP listening on http://127.0.0.1:${port}/mcp`));
 }

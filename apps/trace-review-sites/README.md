@@ -1,6 +1,6 @@
 # Trace Review Sites Adapter
 
-This is the hosted Sites surface for Furry Image Studio Trace Review.
+This is the hosted Sites surface for Bunch: Character Studio Trace Review.
 
 The image pipeline remains the only producer of eval traces. Before each build,
 `scripts/generate-eval-data.mjs` snapshots the existing

@@ -19,6 +19,6 @@ reference_images: []
 
 # Testy Taupin
 
-Testy Taupin is Furry Image Studio's generic, reference-free example profile.
+Testy Taupin is Bunch: Character Studio's generic, reference-free example profile.
 Use it for documentation, tests, and local smoke checks. It must not encode a
 real person's appearance, private reference image, or user preference.
