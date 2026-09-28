@@ -15,8 +15,8 @@ Reviewed at 1536 x 1024 against:
 
 Latest captures:
 
-- `.furry-image-studio/qa/latest-desktop.png`
-- `.furry-image-studio/qa/latest-mobile.png`
+- `.bunch-character-studio/qa/latest-desktop.png`
+- `.bunch-character-studio/qa/latest-mobile.png`
 
 | Contract | Verdict | Evidence |
 | --- | --- | --- |

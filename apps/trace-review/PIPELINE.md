@@ -1,6 +1,6 @@
 # Pipeline Contract
 
-Furry Image Studio Trace Review consumes images produced by an external pipeline. It never calls an image-generation provider or accepts image uploads.
+Bunch: Character Studio Trace Review consumes images produced by an external pipeline. It never calls an image-generation provider or accepts image uploads.
 
 At startup, the reviewer scans each immediate subdirectory under
 `evals/outputs/` for `manifest.json`. New pipeline runs become available after

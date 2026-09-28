@@ -1,10 +1,10 @@
 # ChatGPT Web Quickstart
 
-Furry Image Studio can run on ChatGPT web without a local Codex plugin.
+Bunch: Character Studio can run on ChatGPT web without a local Codex plugin.
 
 ## One-time setup
 
-1. Create a ChatGPT Project named **Furry Image Studio**.
+1. Create a ChatGPT Project named **Bunch: Character Studio**.
 2. Upload `PROJECT_LIBRARY.md` to that Project.
 3. Paste `PROJECT_INSTRUCTIONS.md` into the Project instructions.
 4. Start image work inside that Project.
@@ -68,7 +68,7 @@ These are meanings, not mandatory gestures.
 ## With Bunch connected
 
 If Bunch is available in the same chat, explicitly name the person whose pack
-you want. Furry Image Studio should use Bunch's saved direction board when one
+you want. Bunch: Character Studio should use Bunch's saved direction board when one
 exists and use the person's private appearance references only for the final
 character pass.
 

@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const localHost = host.startsWith("localhost") || host.startsWith("127.");
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (localHost ? "http" : "https");
   const origin = `${protocol}://${host}`;
-  const title = "Furry Image Studio Trace Review";
+  const title = "Bunch: Character Studio Trace Review";
   const description = "Grade pipeline-produced character image traces with pinned evidence.";
   return {
     metadataBase: new URL(origin),

@@ -1,6 +1,6 @@
 ---
 name: generate-character-image
-description: Generate a new image of an arbitrary Furry Image Studio character in a selected rendering style. Use for portraits, scenes, stickers, reference-like illustrations, anime/cartoon/photoreal/storybook images, and new non-photo-edit character art.
+description: Generate a new image of an arbitrary Bunch: Character Studio character in a selected rendering style. Use for portraits, scenes, stickers, reference-like illustrations, anime/cartoon/photoreal/storybook images, and new non-photo-edit character art.
 ---
 
 # Generate Character Image

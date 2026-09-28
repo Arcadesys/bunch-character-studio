@@ -4,11 +4,11 @@ export {
   defaultRubric,
   recordEvalRun,
   runCli,
-} from "../plugins/furry-image-studio/scripts/record_eval_run.mjs";
+} from "../plugins/bunch-character-studio/scripts/record_eval_run.mjs";
 
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { runCli } from "../plugins/furry-image-studio/scripts/record_eval_run.mjs";
+import { runCli } from "../plugins/bunch-character-studio/scripts/record_eval_run.mjs";
 
 const isMain = process.argv[1]
   && import.meta.url === pathToFileURL(resolve(process.argv[1])).href;

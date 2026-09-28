@@ -9,7 +9,7 @@ import subprocess
 
 
 REPOSITORY_ROOT = pathlib.Path(__file__).resolve().parents[1]
-PACKAGE = REPOSITORY_ROOT / "plugins" / "furry-image-studio"
+PACKAGE = REPOSITORY_ROOT / "plugins" / "bunch-character-studio"
 MIRRORED_RELEASE_PATHS = ("README.md", ".codex-plugin", "assets", "skills")
 
 
@@ -36,7 +36,7 @@ def repository_files(*pathspecs: str) -> set[pathlib.Path]:
 
 def main() -> None:
     source_files = repository_files(*MIRRORED_RELEASE_PATHS)
-    package_prefix = pathlib.Path("plugins/furry-image-studio")
+    package_prefix = pathlib.Path("plugins/bunch-character-studio")
     package_pathspecs = [str(package_prefix / path) for path in MIRRORED_RELEASE_PATHS]
     packaged_files = repository_files(*package_pathspecs)
 

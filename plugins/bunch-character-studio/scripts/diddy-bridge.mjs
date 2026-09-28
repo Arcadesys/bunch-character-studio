@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Private local adapter for the DIDdy → Furry Image Studio handoff.
+ * Private local adapter for the DIDdy → Bunch: Character Studio handoff.
  *
  * The request is deliberately one JSON line on stdin so a host can pass MCP
  * metadata without putting short-lived capability URLs in a prompt, argument,

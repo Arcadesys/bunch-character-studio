@@ -283,7 +283,10 @@ await copyFile(join(repoRoot, "assets", "plugin-logo.png"), join(siteRoot, "publ
 
 const metadata = await sourceMetadata();
 const profiles = await loadProfiles();
-const outputDirectories = (await readdir(outputsRoot, { withFileTypes: true }))
+const outputDirectories = (await readdir(outputsRoot, { withFileTypes: true }).catch((error) => {
+  if (error.code === "ENOENT") return [];
+  throw error;
+}))
   .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
   .sort((a, b) => a.name.localeCompare(b.name));
 const runs = [];

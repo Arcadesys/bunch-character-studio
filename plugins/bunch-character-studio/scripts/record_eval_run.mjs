@@ -84,11 +84,13 @@ async function exists(path) {
 }
 
 async function resolveRepoRoot(repoInput) {
-  const configured = repoInput ?? process.env.FURRY_IMAGE_STUDIO_EVAL_REPO;
+  const configured = repoInput ?? process.env.BUNCH_CHARACTER_STUDIO_EVAL_REPO
+    ?? process.env.FURRY_IMAGE_STUDIO_EVAL_REPO;
   const candidates = configured
     ? [resolve(configured)]
     : [
         resolve(process.cwd()),
+        resolve(homedir(), "plugins", "bunch-character-studio"),
         resolve(homedir(), "plugins", "furry-image-studio"),
       ];
   for (const candidate of [...new Set(candidates)]) {
@@ -96,8 +98,8 @@ async function resolveRepoRoot(repoInput) {
     if (await exists(contractPath)) return candidate;
   }
   throw new Error(
-    "Eval repository not found. Pass --repo or set FURRY_IMAGE_STUDIO_EVAL_REPO "
-    + "to a Furry Image Studio checkout.",
+    "Eval repository not found. Pass --repo or set BUNCH_CHARACTER_STUDIO_EVAL_REPO "
+    + "to a Bunch: Character Studio checkout.",
   );
 }
 
@@ -157,7 +159,7 @@ async function loadProfile({
       : join("assets", "styles", fileName);
     candidates.push(
       join(repoRoot, relativeProfile),
-      join(repoRoot, "plugins", "furry-image-studio", relativeProfile),
+      join(repoRoot, "plugins", "bunch-character-studio", relativeProfile),
       join(bundledPluginRoot, relativeProfile),
     );
   }
@@ -278,7 +280,7 @@ async function normalizeSpec(rawSpec, { repoRoot, inputRoot }) {
     character,
     style,
     target: spec.target ?? null,
-    producedBy: spec.producedBy ?? "Codex / ChatGPT Desktop + Furry Image Studio",
+    producedBy: spec.producedBy ?? "Codex / ChatGPT Desktop + Bunch: Character Studio",
     notes: spec.notes ?? null,
     rubric: normalizeRubric(spec.rubric),
     traces,
@@ -470,7 +472,7 @@ function parseJsonOption(value, label) {
 }
 
 function usage() {
-  return `Record an immutable Furry Image Studio eval run
+  return `Record an immutable Bunch: Character Studio eval run
 
 Usage:
   record_eval_run.mjs --repo <checkout> --spec <spec.json>
@@ -487,7 +489,7 @@ For historical results whose exact prompt is unavailable, pass
 
 Paths in a spec are resolved relative to the spec file. Direct argument paths
 are resolved relative to the current directory. The repository can also be set
-with FURRY_IMAGE_STUDIO_EVAL_REPO.
+with BUNCH_CHARACTER_STUDIO_EVAL_REPO (legacy FURRY_IMAGE_STUDIO_EVAL_REPO also works).
 `;
 }
 

@@ -1,6 +1,6 @@
 ---
 name: record-eval-trace
-description: Automatically record every recordable Furry Image Studio source/output image pair as an immutable evaluation run; also use to add a previous result to Trace Review.
+description: Automatically record every recordable Bunch: Character Studio source/output image pair as an immutable evaluation run; also use to add a previous result to Trace Review.
 ---
 
 # Record Eval Trace
@@ -9,7 +9,7 @@ description: Automatically record every recordable Furry Image Studio source/out
 
 Record a produced source/output pair, exact composed prompt, profile snapshots,
 and available generation metadata into one checksum-backed canonical run under
-the user's Furry Image Studio checkout. Do not generate or edit an image in this
+the user's Bunch: Character Studio checkout. Do not generate or edit an image in this
 skill.
 
 ## Automatic Recording Policy
@@ -29,12 +29,13 @@ skill.
 
 Automatic records copy the source, output, exact prompt, profile snapshots, and
 available generation metadata into the local eval checkout. This policy is for
-the user who has explicitly enabled automatic Furry Image Studio output
+the user who has explicitly enabled automatic Bunch: Character Studio output
 recording; if they later ask to stop, revert to explicit-only recording.
 
 ## Workflow
 
-1. Resolve the eval checkout from `FURRY_IMAGE_STUDIO_EVAL_REPO`, the current
+1. Resolve the eval checkout from `BUNCH_CHARACTER_STUDIO_EVAL_REPO` (or the legacy
+   `FURRY_IMAGE_STUDIO_EVAL_REPO`), the current
    workspace when it contains `apps/trace-review/PIPELINE.md`, or an explicit
    repository path from the user.
 2. Identify the local source image and produced local output image. For a
@@ -61,7 +62,7 @@ own source.
 
 ```bash
 node <plugin-root>/scripts/record_eval_run.mjs \
-  --repo <furry-image-studio-checkout> \
+  --repo <bunch-character-studio-checkout> \
   --source <source-image> \
   --output <accepted-generated-image> \
   --title "<review-set title>" \

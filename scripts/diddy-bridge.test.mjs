@@ -5,9 +5,9 @@ import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import test from "node:test";
-import { generatePreparedFurryScene } from "../plugins/furry-image-studio/scripts/diddy-bridge.mjs";
+import { generatePreparedFurryScene } from "../plugins/bunch-character-studio/scripts/diddy-bridge.mjs";
 
-const bridge = "plugins/furry-image-studio/scripts/diddy-bridge.mjs";
+const bridge = "plugins/bunch-character-studio/scripts/diddy-bridge.mjs";
 
 function runBridge(manifest, extraEnv = {}, entrypoint = bridge) {
   return new Promise((resolve, reject) => {

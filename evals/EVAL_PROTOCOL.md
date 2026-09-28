@@ -1,4 +1,4 @@
-# Furry Image Studio Eval Protocol
+# Bunch: Character Studio Eval Protocol
 
 This is the repeatable path for measuring whether a result is *authored*, not
 merely pretty. One evaluation run contains one to eight accepted source/output
@@ -112,7 +112,7 @@ changes, make a new run.
    ```bash
    npm run judge:prepare -- \
      --bundle evals/cases/<exported-bundle> \
-     --out .furry-image-studio/judge-runs/authorship-v1 \
+     --out .bunch-character-studio/judge-runs/authorship-v1 \
      --holdout 0.25
    ```
 
