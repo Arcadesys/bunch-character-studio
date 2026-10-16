@@ -1,6 +1,6 @@
 # Bunch: Character Studio
 
-**Reusable AI character-transformation tools for Codex and ChatGPT.**
+**Keep a character recognizable across AI images, styles, and repairs.**
 
 Bunch: Character Studio is an installable Codex / ChatGPT Desktop plugin for
 reusable character definitions, image generation, repair, and sticker work.
@@ -11,13 +11,17 @@ Character identity stays separate from rendering style, so the same character
 can move across visual treatments without losing canon. The skills support new
 image generation, selected-subject transformation, and localized repair.
 
+**Try it:** follow the [Desktop plugin installation](#chatgpt-desktop--codex-plugin), or use the [web and Android companion](#chatgpt-web-and-android--project-companion). Start with a character definition and references you have chosen to use.
+
+**Collaborator starting point:** explore [skills/](skills/) and [profile definitions](assets/), then run the [release checks](#test-before-release). Changes to canonical files must also update the packaged copy under `plugins/bunch-character-studio/`.
+
 ## Engineering highlights
 
 - Installable Codex plugin with reusable image-workflow skills
 - Canon-preserving separation between character identity and rendering style
 - Generation, selected-subject transformation, and localized repair workflows
 - Canonical authoring files mirrored into a verified release package
-- Profile validation, CI, and release-contract tests that prevent package drift
+- Profile validation and release-contract tests for detecting package drift
 - Optional private MCP evaluation service with checksum-backed trace artifacts
 - Human evaluation, calibrated model judging, and regression workflows for accepted image pairs
 
