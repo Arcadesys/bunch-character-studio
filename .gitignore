@@ -7,6 +7,7 @@ apps/trace-review/node_modules/
 node_modules/
 playwright-report/
 test-results/
+dist/
 .DS_Store
 __MACOSX/
 # Personal or generated image evidence stays local. Public examples must use

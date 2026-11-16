@@ -81,3 +81,14 @@ references for the final renders.
 ```
 
 Never choose a person merely because they are hosting or fronting.
+
+## Transformation comic starter
+
+Attach a starting photo (if wanted) and the final character reference, then say:
+
+> Make a four-panel TF comic of me becoming this character while trying to finish
+> my coffee. Playful surprise, intact clothing, no dialogue. Keep the cafe and mug
+> consistent. Show clear intermediate stages and give me a text transcript.
+
+Ask for a vertical strip for phone reading. To revise it, name the panel and the
+one defect; approved neighboring panels should remain unchanged.
