@@ -1,4 +1,8 @@
 .PHONY: test sync-release plugin-test workspace-deps eval-recorder-test judge-test service-test
+.PHONY: package
+
+package: plugin-test
+	python3 scripts/package_release.py
 .PHONY: test sync-release plugin-test workspace-deps diddy-bridge-test telegram-sticker-test eval-recorder-test judge-test service-test
 
 test: plugin-test diddy-bridge-test telegram-sticker-test eval-recorder-test judge-test service-test

@@ -15,6 +15,20 @@ image generation, selected-subject transformation, and localized repair.
 
 **Collaborator starting point:** explore [skills/](skills/) and [profile definitions](assets/), then run the [release checks](#test-before-release). Changes to canonical files must also update the packaged copy under `plugins/bunch-character-studio/`.
 
+## Transformation comics
+
+Use `make-tf-comic` for a staged transformation sequence: define the starting
+appearance and final character, map visible changes panel by panel, render
+with consistent references, and repair individual panels. The workflow supports
+photo-preserving sequences and drawn comics, readable lettering, and an
+accessible panel transcript.
+
+Try: “Make a four-panel comic of me becoming my fursona while trying to finish
+my coffee. Keep my clothes, cafe, and mug consistent. Playful surprise.”
+
+The shareable preview includes desktop installation and a web/mobile Project
+companion. Start with `START_HERE.md` at the top of the extracted package.
+
 ## Engineering highlights
 
 - Installable Codex plugin with reusable image-workflow skills

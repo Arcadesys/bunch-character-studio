@@ -1,7 +1,7 @@
 {
   "name": "bunch-character-studio",
-  "version": "0.1.0+codex.20260925200000",
-  "description": "Codex / ChatGPT Desktop plugin for defining characters and creating, repairing, and evaluating character images and sticker packs.",
+  "version": "0.2.0-preview.1",
+  "description": "Character art, photo transformations, TF comics, targeted repairs, and personalized sticker packs for Codex and ChatGPT.",
   "author": {
     "name": "Arcadesys",
     "url": "https://github.com/Arcadesys"
@@ -21,8 +21,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Bunch: Character Studio",
-    "shortDescription": "Generate, repair, and turn characters into sticker packs.",
-    "longDescription": "Bunch: Character Studio is a Codex / ChatGPT Desktop skill plugin for character generation, targeted image repair, transformations, and personalized reaction sticker packs. The sticker workflow interviews for communication style, approves ten reaction performances, blocks poses cheaply, repairs one sticker at a time, applies character references only after pose approval, and can publish approved static sets to Telegram from a local helper. It can also route an explicitly named private DIDdy alter through an installed local bridge without publishing private references.",
+    "shortDescription": "Create character art, TF comics, and sticker packs.",
+    "longDescription": "Bunch: Character Studio is a Codex / ChatGPT Desktop skill plugin for character generation, targeted image repair, transformations, and personalized reaction sticker packs. The sticker workflow interviews for communication style, approves ten reaction performances, blocks poses cheaply, repairs one sticker at a time, applies character references only after pose approval, and can publish approved static sets to Telegram from a local helper. It can also route an explicitly named private DIDdy alter through an installed local bridge without publishing private references. Plan and render transformation comics with staged anatomy, panel continuity, individual panel repair, readable lettering, and accessible transcripts.",
     "developerName": "Arcadesys",
     "category": "Productivity",
     "capabilities": [
@@ -32,10 +32,11 @@
       "style profiles",
       "personalized sticker packs",
       "Telegram sticker publishing",
-      "private DIDdy bridge"
+      "private DIDdy bridge",
+      "transformation comics"
     ],
     "websiteURL": "https://github.com/Arcadesys/bunch-character-studio",
     "logo": "./assets/plugin-logo.png",
-    "defaultPrompt": "Help me define a character with references and evaluation cases, create or repair character art, or make a personalized sticker pack."
+    "defaultPrompt": "Help me define a character, transform a photo, make a TF comic or sticker pack, or repair character art."
   }
 }
